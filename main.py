@@ -6,7 +6,7 @@ class Player():
         self.name = name
 
     def get(self):
-        print(self.name)
+        return self.name
 
     def take_a_card(self, number_of_cards = 1):
         self.card = Card()
@@ -21,7 +21,7 @@ class Card():
         except ValueError:  # IndexError:
             # print('ошибка удаления')
             return False
-        print('удаление прошло успешно')
+        # print('удаление прошло успешно')
         if self.numbers == []:
             print('VICTORY')
             return 2
@@ -38,6 +38,7 @@ class Bag():
 
 
 if __name__ == '__main__':
+    '''
     card_player = Card()
     card_comp = Card()
     bag = Bag()
@@ -54,14 +55,33 @@ if __name__ == '__main__':
         if card_comp.сheck(i) == 2:
             print('Comp VIN')
             break
+    '''
 
     players = []
-    number_of_players = 6  # imt(input('Введите количество игроков') - 1)
+    number_of_players = 65536  # imt(input('Введите количество игроков') - 1)
     for i in range(number_of_players):
         players.append(Player(f'Player {i + 1}'))
+    # for i in players:
+    #     print(i.get())
     for i in players:
-        i.get()
+        i.take_a_card()
+    # for i in players:
+    #     print(i.get(), '\t', i.card.numbers)
 
+    bag = Bag()
+    step = 0
+    game_over = False
+    for keg in bag.numbers:
+        if game_over:
+            break
+        step += 1
+        print(f'\tХод № {step} \t\tБочонок {keg}')
+        for player in players:
+            # print(player.get(), '\t', player.card.numbers)
+            if player.card.сheck(keg) == 2:
+                print(f'\t\t\t{player.get()} VIN')
+                game_over = True
+        print()
     # if answer :
     #     print("Yes")
     # card_player.numbers.pop(i)
