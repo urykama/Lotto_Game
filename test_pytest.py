@@ -14,6 +14,7 @@ class TestBag:
         '''
         bag = Bag()
         assert len(bag.numbers) == 90
+        # ниже проверка, что нет повторяющихся номеров
         assert len(set(bag.numbers)) == len(bag.numbers)
 
 
@@ -29,8 +30,11 @@ from main import answer
 #     '''
 #     assert answer('y') == True
 
-
-def test_check_correct_answer():
+@pytest.mark.parametrize('a, b, expected_result', [(True, True, False),
+                                                   (True, False, True),
+                                                   (False, True, True),
+                                                   (False, False, False)])
+def test_check_correct_answer(a, b, expected_result):
     '''
 	Если игрок выбрал "зачеркнуть":
 		Если цифра есть на карточке - она зачеркивается и игра продолжается.
@@ -40,7 +44,4 @@ def test_check_correct_answer():
 		Если цифры на карточке нет - игра продолжается.
 	:return: True - выход из игры
 	'''
-    assert check_correct_answer(True, True) == False
-    assert check_correct_answer(True, False) == True
-    assert check_correct_answer(False, True) == True
-    assert check_correct_answer(False, False) == False
+    assert check_correct_answer(a, b) == expected_result

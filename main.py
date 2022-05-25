@@ -41,22 +41,18 @@ class Card():
 
             for j in range(9):
                 sum_in_column = self.card[0][j] + self.card[1][j] + self.card[2][j]
-                print(j, '\t',sum_in_column)
                 if sum_in_column in (0, 3):
-                    print(454545)
                     card_bad = True
                     break
-                    print(47)
-
-                plus = 9 if j < 8 else 10
+                plus = 10 if j < 8 else 11
+                # print(j, '\t', 10 * j + plus, '\t',sum_in_column)
                 numbers = sorted(list(sample(range(10 * j, 10 * j + plus), k=sum_in_column)))
                 self.numbers += numbers
 
                 for i in range(3):
                     if self.card[i][j] == 1:
                         self.card[i][j] = numbers.pop(0)
-                        # print(numbers)
-            print(self.numbers)
+            # print(self.numbers)
 
     def __str__(self):
         ret = '+------------------------------------+\n'
@@ -150,32 +146,13 @@ def check_correct_answer(answer, card_check):
 
 
 if __name__ == '__main__':
-    '''
-    card_player = Card()
-    card_comp = Card()
-    bag = Bag()
-    step = 0
-    for i in bag.numbers:
-        step += 1
-        print(f'\tХод № {step} \t\tБочонок {i}')
-        print(card_player.numbers)
-        print(card_comp.numbers)
-        # answer = True if input('Зачеркнуть цифру? (y/n)').strip().lower() == 'y' else False
-        if card_player.сheck(i) == 2:
-            print('Player VIN')
-            break
-        if card_comp.сheck(i) == 2:
-            print('Comp VIN')
-            break
-    '''
-
     players = []
-    number_of_players = 3  # imt(input('Введите количество игроков') - 1)
+    number_of_players = 65536  # imt(input('Введите количество игроков') - 1)
     for i in range(number_of_players):
         players.append(Player(f'PC Player {i + 1}'))
     # players.append(Player('User', True))
-    for i in players:
-        print(i.get())
+    # for i in players:
+    #     print(i.get())
     for i in players:
         i.take_a_card()
     # for i in players:
@@ -187,22 +164,20 @@ if __name__ == '__main__':
     for keg in bag.numbers:
         if game_over:
             break
+        player_card_сheck = 255
         step += 1
         print(f'\tХод № {step} \t\tБочонок {keg}')
         for player in players:
-            print('\tкарточка игрока: ' + player.name)
-            print(player.card)
+            # print('\tкарточка игрока: ' + player.name)
+            # print(player.card)
             if player.user:
-                if answer():
-                    if not player.card.сheck(keg):
-                        print('Game Over')
-                        game_over = True
-                else:
-                    if player.card.сheck(keg):
-                        print('Game Over')
-                        game_over = True
+                # print(f'\tХод № {step} \t\tБочонок {keg}')
+                player_card_сheck = player.card.сheck(keg)
+                if answer() ^ player_card_сheck:
+                    print('Game Over')
+                    game_over = True
             # print(player.get(), '\t', player.card.numbers)
-            if player.card.сheck(keg) == 2:
+            if player.card.сheck(keg) == 2 or player_card_сheck == 2:
                 print(f'\t\t\t{player.get()} VIN')
                 game_over = True
         print()
