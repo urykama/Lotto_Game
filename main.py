@@ -12,6 +12,7 @@ class Player():
 
     def get(self):
         return self.name
+
     def get_user(self):
         return self.user
 
@@ -25,46 +26,37 @@ class Player():
 
 
 class Card():
-    # def __init__(self):
-    #     '''
-    #     Создание карточки
-    #     как оказалось, это "тупиковый" путь
-    #     '''
-    #     ok = True
-    #     while ok:
-    #         ok = False
-    #         self.numbers = sorted(list(sample(range(1, 91), k=15)))
-    #         # print(self.numbers)
-    #         for i in range(0, 81, 10):
-    #             # print(i)
-    #             decimal = 0
-    #             for j in range(i, i + 10):
-    #                 if j in self.numbers: decimal += 1
-    #                 if j == 89 and 90 in self.numbers: decimal += 1
-    #             if decimal > 3:  # в каждом столбике ... не больше трёх чисел
-    #                 print(f'1111111111111111111111111111111  {j}')
-    #                 ok = True
-
     def __init__(self):
-        self.numbers = []
-        self.card = ([0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0])
-        for row in range(0, 3):
-            numbers = sorted(list(sample(range(0, 9), k=5)))
-            for i in range(0, 9):
-                self.card[row][i] = 1 if i in numbers else 0
+        card_bad = True
+        while card_bad:
+            card_bad = False
+            self.numbers = []
+            self.card = ([0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0, 0, 0])
+            for row in range(0, 3):
+                numbers = sorted(list(sample(range(0, 9), k=5)))
+                for i in range(0, 9):
+                    self.card[row][i] = 1 if i in numbers else 0
 
-        for j in range(9):
-            sum_in_column = self.card[0][j] + self.card[1][j] + self.card[2][j]
-            numbers = sorted(list(sample(range(10 * j, 10 * j + 9), k=sum_in_column)))
-            self.numbers += numbers
+            for j in range(9):
+                sum_in_column = self.card[0][j] + self.card[1][j] + self.card[2][j]
+                print(j, '\t',sum_in_column)
+                if sum_in_column in (0, 3):
+                    print(454545)
+                    card_bad = True
+                    break
+                    print(47)
 
-            for i in range(3):
-                if self.card[i][j] == 1:
-                    self.card[i][j] = numbers.pop(0)
-                    # print(numbers)
-        # print(self.numbers)
+                plus = 9 if j < 8 else 10
+                numbers = sorted(list(sample(range(10 * j, 10 * j + plus), k=sum_in_column)))
+                self.numbers += numbers
+
+                for i in range(3):
+                    if self.card[i][j] == 1:
+                        self.card[i][j] = numbers.pop(0)
+                        # print(numbers)
+            print(self.numbers)
 
     def __str__(self):
         ret = '+------------------------------------+\n'
@@ -125,6 +117,7 @@ def answer():
     '''
     return input('Зачеркнуть цифру? (y/n)  ').strip().lower() == 'y'
 
+
 def check_correct_answer(answer, card_check):
     '''
 
@@ -149,12 +142,11 @@ def check_correct_answer(answer, card_check):
     #         return False
     return answer ^ card_check
 
+
 # print(check_correct_answer(True, True) == False)
 # print(check_correct_answer(True, False) == True)
 # print(check_correct_answer(False, True) == True)
 # print(check_correct_answer(False, False) == False)
-
-
 
 
 if __name__ == '__main__':
@@ -178,10 +170,10 @@ if __name__ == '__main__':
     '''
 
     players = []
-    number_of_players = 1  # imt(input('Введите количество игроков') - 1)
+    number_of_players = 3  # imt(input('Введите количество игроков') - 1)
     for i in range(number_of_players):
         players.append(Player(f'PC Player {i + 1}'))
-    players.append(Player('User', True))
+    # players.append(Player('User', True))
     for i in players:
         print(i.get())
     for i in players:
@@ -190,7 +182,6 @@ if __name__ == '__main__':
     #     print(i.get(), '\t', i.card.numbers)
 
     bag = Bag()
-    # print(len(bag.numbers))
     step = 0
     game_over = False
     for keg in bag.numbers:
@@ -215,4 +206,3 @@ if __name__ == '__main__':
                 print(f'\t\t\t{player.get()} VIN')
                 game_over = True
         print()
-
