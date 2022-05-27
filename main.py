@@ -15,7 +15,7 @@ class Player():
         return self.name
 
     def get_user(self):
-        return self.user
+        return self.user_is_PC
 
     def take_a_card(self, number_of_cards=1):
         '''

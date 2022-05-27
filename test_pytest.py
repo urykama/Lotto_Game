@@ -26,9 +26,9 @@ class TestPlayer():
 
     def test_get_user(self):
         player = Player()
-        assert player.get_user() == False
+        assert player.get_user() == True
 
-    def test_get_user(self):
+    def test_get_user2(self):
         player = Player()
         player.take_a_card()
         assert len(player.card.__str__()) == 194
