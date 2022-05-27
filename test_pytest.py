@@ -1,7 +1,8 @@
 import pytest
+# import pytest_cov
 from main import check_correct_answer
 
-from main import Bag
+from main import Bag, Player, Card
 
 
 class TestBag:
@@ -18,17 +19,40 @@ class TestBag:
         assert len(set(bag.numbers)) == len(bag.numbers)
 
 
-from main import answer
+class TestPlayer():
+    def test_get(self):
+        player = Player()
+        assert player.get() == 'UnNamedUser'
+
+    def test_get_user(self):
+        player = Player()
+        assert player.get_user() == False
+
+    def test_get_user(self):
+        player = Player()
+        player.take_a_card()
+        assert len(player.card.__str__()) == 194
+
+    def test_check_card(self):
+        player = Player()
+        player.take_a_card()
+        player.card.numbers = [13]
+        assert player.winner == False
+        player.check_card(13)
+        assert player.winner == True
 
 
-# def test_answer():
-#     '''
-#     Пользователю предлагается зачеркнуть цифру на карточке или продолжить.
-#     при вводе "y" или "Y" (с пробелами или без),
-#     возвращает True
-#     :return:
-#     '''
-#     assert answer('y') == True
+class TestCard():
+    def test_card(self):
+        card = Card()
+        assert len(card.__str__()) == 194
+        assert len(card.numbers) == 15
+        assert card.сheck(card.numbers[0]) == True
+        assert len(card.numbers) == 14
+        assert card.сheck(91) == False
+        card.numbers = [13]
+        assert card.сheck(13) == 'victory'
+
 
 @pytest.mark.parametrize('a, b, expected_result', [(True, True, False),
                                                    (True, False, True),

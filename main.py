@@ -1,14 +1,15 @@
-from random import sample  # , randint
+from random import sample
 
 
 class Player():
-    def __init__(self, name='UnNamedUser', user=False):
+    def __init__(self, name='UnNamedUser', user_is_PC=True):
         '''
         :param name: имя
         :param user: человек или компьютер
         '''
         self.name = name
-        self.user = True if user else False
+        self.user_is_PC = True if user_is_PC else False
+        self.winner = False
 
     def get(self):
         return self.name
@@ -24,6 +25,19 @@ class Player():
         '''
         self.card = Card()
 
+    def show_cards(self):
+        print('\tкарточка игрока: ' + self.name)
+        print(self.card)
+
+    def check_card(self, keg):
+        if self.user_is_PC:
+            if self.card.сheck(keg) == 'victory':
+                self.winner = True
+        else:
+            player_card_сheck = self.card.сheck(keg)
+            if answer() ^ player_card_сheck:
+                if player_card_сheck == 'victory':
+                    self.winner = True
 
 class Card():
     def __init__(self):
@@ -86,8 +100,7 @@ class Card():
             return False
         # print('удаление прошло успешно')
         if self.numbers == []:
-            print('VICTORY')
-            return 2
+            return 'victory'
         return True
 
 
@@ -100,9 +113,6 @@ class Bag():
     def __init__(self):
         self.numbers = list(sample(range(1, 91), k=90))
 
-
-# class Keg():
-#     pass
 
 def answer():
     '''
@@ -122,62 +132,57 @@ def check_correct_answer(answer, card_check):
     :return: True  - выход из игры,
              False - продолжаем игру
     '''
-    # if answer:
-    #     if card_check:
-    #         print('продолжаем игру1')
-    #         return False
-    #     else:
-    #         print('выход из игры1')
-    #         return True
-    # else:
-    #     if card_check:
-    #         print('выход из игры2')
-    #         return True
-    #     else:
-    #         print('продолжаем игру2')
-    #         return False
-    return answer ^ card_check
+    if answer:
+        if card_check:
+            print('продолжаем игру1')
+            return False
+        else:
+            print('выход из игры1')
+            return True
+    else:
+        if card_check:
+            print('выход из игры2')
+            return True
+        else:
+            print('продолжаем игру2')
+            return False
+    # return answer ^ card_check
 
 
-# print(check_correct_answer(True, True) == False)
-# print(check_correct_answer(True, False) == True)
-# print(check_correct_answer(False, True) == True)
-# print(check_correct_answer(False, False) == False)
-
-
-if __name__ == '__main__':
+class Game():
+    '''
+    создаем игров
+    # int(input('Введите количество игроков') - 1)
+    '''
     players = []
-    number_of_players = 65536  # imt(input('Введите количество игроков') - 1)
+    number_of_players = 5  # количество игроков компьютер и их создание
     for i in range(number_of_players):
         players.append(Player(f'PC Player {i + 1}'))
-    # players.append(Player('User', True))
+    # players.append(Player('User', False))  # добавление игрока пользователь
     # for i in players:
-    #     print(i.get())
-    for i in players:
-        i.take_a_card()
+    #     print(i.get())  # вывод имен игроков
+    for player in players:
+        player.take_a_card()  # игроки набирают карты
     # for i in players:
     #     print(i.get(), '\t', i.card.numbers)
 
-    bag = Bag()
     step = 0
     game_over = False
+    bag = Bag()
     for keg in bag.numbers:
-        if game_over:
-            break
-        player_card_сheck = 255
         step += 1
         print(f'\tХод № {step} \t\tБочонок {keg}')
         for player in players:
-            # print('\tкарточка игрока: ' + player.name)
-            # print(player.card)
-            if player.user:
-                # print(f'\tХод № {step} \t\tБочонок {keg}')
-                player_card_сheck = player.card.сheck(keg)
-                if answer() ^ player_card_сheck:
-                    print('Game Over')
-                    game_over = True
-            # print(player.get(), '\t', player.card.numbers)
-            if player.card.сheck(keg) == 2 or player_card_сheck == 2:
-                print(f'\t\t\t{player.get()} VIN')
+            player.show_cards()
+            player.check_card(keg)
+        for player in players:
+            if player.winner:
+                print(f'\t\t\t{player.get()} WINNER')
                 game_over = True
+        if game_over:
+            break
         print()
+
+
+if __name__ == '__main__':
+    game = Game()
