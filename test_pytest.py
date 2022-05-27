@@ -15,18 +15,37 @@ class TestBag:
         '''
         bag = Bag()
         assert len(bag.numbers) == 90
+
+    def test_Bag_first_end(self):
+        bag = Bag()
+        temp = bag.numbers
+        temp.sort()
+        assert temp[0] == 1
+        assert temp[-1] == 90
+
+    def test_Bag_random(self):
+        bag = Bag()
         # ниже проверка, что нет повторяющихся номеров
         assert len(set(bag.numbers)) == len(bag.numbers)
 
+    def test_Bag_len(self):
+        bag = Bag()
+        assert len(bag) == len(bag.numbers)
+
+    def test_Bag_get_item(self):
+        bag = Bag()
+        assert int(bag[89])
+        assert bag[90] == None
+
 
 class TestPlayer():
-    def test_get(self):
+    def test_get_user_name(self):
         player = Player()
-        assert player.get() == 'UnNamedUser'
+        assert player.get_user_name() == 'UnNamedUser'
 
-    def test_get_user(self):
+    def test_get_user_is_PC(self):
         player = Player()
-        assert player.get_user() == True
+        assert player.get_user_is_PC() == True
 
     def test_get_user2(self):
         player = Player()

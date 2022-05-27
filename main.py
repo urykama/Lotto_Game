@@ -11,10 +11,27 @@ class Player():
         self.user_is_PC = True if user_is_PC else False
         self.winner = False
 
-    def get(self):
+    def __str__(self):
+        if self.user_is_PC:
+            ret = f'Имя компьютерного игрока: {self.name}'
+        else:
+            ret = f'Имя игрока: {self.name}'
+        if self.winner:
+            ret += '  ВЫИГРАЛ'
+        return ret
+
+    def __eq__(self, other):
+        '''
+        что тут сравнивать?
+        :param other:
+        :return:
+        '''
+        return self.user_is_PC == other.user_is_PC and self.winner == other.winner
+
+    def get_user_name(self):
         return self.name
 
-    def get_user(self):
+    def get_user_is_PC(self):
         return self.user_is_PC
 
     def take_a_card(self, number_of_cards=1):
@@ -31,13 +48,17 @@ class Player():
 
     def check_card(self, keg):
         if self.user_is_PC:
-            if self.card.сheck(keg) == 'victory':
+            self.card.сheck(keg)
+            print(len(self.card), self.card.numbers)
+            if len(self.card) == 0:
                 self.winner = True
         else:
-            player_card_сheck = self.card.сheck(keg)
-            if answer() ^ player_card_сheck:
-                if player_card_сheck == 'victory':
+            if answer() ^ self.card.сheck(keg):
+                if len(self.card) == 0:
                     self.winner = True
+            else:
+                return 'Акелла промахнулся'
+
 
 class Card():
     def __init__(self):
@@ -58,15 +79,13 @@ class Card():
                 if sum_in_column in (0, 3):
                     card_bad = True
                     break
-                plus = 10 if j < 8 else 11
-                # print(j, '\t', 10 * j + plus, '\t',sum_in_column)
-                numbers = sorted(list(sample(range(10 * j, 10 * j + plus), k=sum_in_column)))
+                start = 1 if j < 1 else 10 * j
+                stop = 10 * j + 10 if j < 8 else 91
+                numbers = sorted(list(sample(range(start, stop), k=sum_in_column)))
                 self.numbers += numbers
-
                 for i in range(3):
                     if self.card[i][j] == 1:
                         self.card[i][j] = numbers.pop(0)
-            # print(self.numbers)
 
     def __str__(self):
         ret = '+------------------------------------+\n'
@@ -85,6 +104,17 @@ class Card():
             ret += '|\n'
         ret += '+------------------------------------+'
         return ret
+
+    def __eq__(self, other):
+        '''
+        вероятность выпадения одинаковых карточек стремиться к нулю
+        :param other:
+        :return:
+        '''
+        return self.card == other.card
+
+    def __len__(self):
+        return len(self.numbers)
 
     def сheck(self, keg):
         '''
@@ -112,6 +142,20 @@ class Bag():
 
     def __init__(self):
         self.numbers = list(sample(range(1, 91), k=90))
+
+    def __str__(self):
+        ret = 'Бочонки перемешаны:\n'
+        for i in range(0, 90, 15):
+            ret += f'{self.numbers[i: i + 15]}\n'
+        return ret
+
+    def __len__(self):
+        return len(self.numbers)
+
+    def __getitem__(self, item):
+        if 0 <= item < len(self.numbers):
+            return self.numbers[item]
+        print('Ошибка! Элемент с таким индексом отсутсвует!')
 
 
 def answer():
@@ -160,28 +204,36 @@ class Game():
         players.append(Player(f'PC Player {i + 1}'))
     # players.append(Player('User', False))  # добавление игрока пользователь
     # for i in players:
-    #     print(i.get())  # вывод имен игроков
+    #     print(i.get_name())  # вывод имен игроков
     for player in players:
         player.take_a_card()  # игроки набирают карты
-    # for i in players:
-    #     print(i.get(), '\t', i.card.numbers)
-
     step = 0
     game_over = False
     bag = Bag()
+    # print(bag[92])
     for keg in bag.numbers:
         step += 1
         print(f'\tХод № {step} \t\tБочонок {keg}')
         for player in players:
             player.show_cards()
-            player.check_card(keg)
+            if player.check_card(keg) != None:
+                print('Акелла промахнулся')
+                game_over = True
         for player in players:
             if player.winner:
-                print(f'\t\t\t{player.get()} WINNER')
+                print(player)
                 game_over = True
         if game_over:
             break
         print()
+
+    def __str__(self):
+        '''
+        Это шутка, здесь класс для организации кода,
+        а не для создания объектов...
+        :return: выводить нечего
+        '''
+        return 'И вновь подолжается бой.'
 
 
 if __name__ == '__main__':
